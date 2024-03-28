@@ -72,7 +72,15 @@ public class InfoGen {
             JSONObject typeInf = (JSONObject) types.get(i);
             String type = typeInf.getJSONObject("type").getString("name");
             returner[i] = type;
-        }
+        } if (returner[1] == null){returner[1] = "";}
         return returner;
+    }
+    public static void main(String[] args) throws IOException {
+        InfoGen c = new InfoGen();
+        String[] q = c.getTypes("pichu");
+        for (String d : q){
+            System.out.println(d);
+        }
+
     }
 }
