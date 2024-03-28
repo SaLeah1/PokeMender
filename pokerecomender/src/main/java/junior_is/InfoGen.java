@@ -1,11 +1,17 @@
 package junior_is;
 
+import java.io.FileWriter;
 // Exceptions
 import java.io.IOException;
 
 // Core
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 // 3rd party
 import org.json.JSONObject;
@@ -14,11 +20,26 @@ import org.apache.commons.io.IOUtils;
 
 public class InfoGen {
 
-    public JSONObject getJSON(String PokemonName) throws IOException{
+    List<String> cachedMons = new ArrayList<String>();
+
+    public JSONObject getJSON(String pokemonName) throws IOException{
+        if (Arrays.asList(cachedMons).contains(pokemonName)){
+            Path cache = Path.of("pokerecomender\\src\\main\\java\\junior_is\\cashe");
+            String jsonString = Files.readString(cache);
+            return new JSONObject(jsonString);
+        } else {
+            return download(pokemonName);
+        }
+    }
+
+    public JSONObject download(String PokemonName) throws IOException{
         PokemonName = PokemonName.toLowerCase();
         String urlString = String.format("https://pokeapi.co/api/v2/pokemon/%s",PokemonName);
         URL APICall = new URL(urlString);
         String json = IOUtils.toString(APICall, Charset.forName("UTF-8"));
+        FileWriter file = new FileWriter(String.format("pokerecomender\\src\\main\\java\\junior_is\\cashe\\%s",PokemonName));
+        file.write(json);
+        file.close();
         return new JSONObject(json);
     }
 
