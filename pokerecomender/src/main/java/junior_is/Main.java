@@ -9,49 +9,16 @@ import java.util.Arrays;
 // Core
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 import java.io.File;
 import java.util.function.IntConsumer;
 
 /*
-Full list of imports used anywhere within the project as follows:
+ *
+ *
+ */
 
-// Exceptions
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-
-// Core
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.awt.*;
-import java.io.File;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.function.IntConsumer;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
-import javax.imageio.ImageIO;
-import javax.swing.plaf.basic.BasicSpinnerUI;
-import javax.swing.*;
-
-// 3rd party
-import net.miginfocom.swing.*;
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.math3.linear.*;
-import org.apache.commons.math3.stat.correlation.Covariance;
-
-*/
 public class Main {
 
     public SmogonParser parser; // reads in smogon json file || can return Pokemon Names
@@ -68,11 +35,24 @@ public class Main {
         parser = new SmogonParser("https://www.smogon.com/stats/2024-01/chaos/gen3ou-1760.json");
         Iterator<String> pokemonItt = parser.getPokemon();
         List<String> pokemonList = new ArrayList<>();
-        //pokemonList.add("                ");
-        pokemonList.add("Bisharp"); // for testing the type gen. This is supposed to break the gui display dw
+        pokemonList.add("                ");
+        //pokemonList.add("Bisharp"); // for testing the type gen. This is supposed to break the gui display dw
         pokemonItt.forEachRemaining(pokemonList::add);
         String[] pokemonArr = Arrays.copyOf(pokemonList.toArray(), pokemonList.toArray().length, String[].class);
-        mainWindow = new GUI(new File("pokerecomender\\src\\main\\resources\\items.txt"));
+
+        Scanner iStream = new Scanner(new File("pokerecomender\\src\\main\\resources\\items.txt"));
+        String itemStr = "                ,";
+        while(iStream.hasNext()){
+            String item = iStream.nextLine();
+            itemStr += item+",";
+        } iStream.close();
+        try{
+            itemStr = itemStr.substring(0,itemStr.length()-1);
+        } catch(IndexOutOfBoundsException e){
+            System.out.println("No Item CSV btw"); // theres a what to do on the teampanel for empty itemsets dw
+        } String[] itemArr = itemStr.split(",");
+        mainWindow = new GUI(itemArr);
+
         int i = 0;
         int j = 0;
         int l = 0;
@@ -121,7 +101,7 @@ public class Main {
             }
             mainWindow.updatePokemonList(p, pokemonArr);
         }
-        this.getDefTypal();
+        //this.getDefTypal();
     }
 
     /* 
