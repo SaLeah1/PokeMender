@@ -1,11 +1,19 @@
 package junior_is;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 // Exceptions
 import java.io.IOException;
 
 // Core
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 // 3rd party
 import org.json.JSONObject;
@@ -14,17 +22,47 @@ import org.apache.commons.io.IOUtils;
 
 public class InfoGen {
 
-    public JSONObject getJSON(String PokemonName) throws IOException{
-        PokemonName = PokemonName.toLowerCase();
-        String urlString = String.format("https://pokeapi.co/api/v2/pokemon/%s",PokemonName);
+    List<String> cachedMons = new ArrayList<String>();
+
+    public InfoGen() throws FileNotFoundException{ // grab the list of cached files
+        Scanner iStream = new Scanner(new File("pokerecomender/src/main/java/junior_is/caches/pokeCache/.pokemon"));
+        while(iStream.hasNext()){
+            String item = iStream.nextLine();
+            cachedMons.add(item);
+        } iStream.close();
+    }
+
+    public JSONObject getJSON(String pokemonName) throws IOException{
+        pokemonName = pokemonName.toLowerCase();
+        if (cachedMons.contains(pokemonName)){
+            System.out.println("got");
+            Path cache = Path.of(String.format("pokerecomender/src/main/java/junior_is/caches/pokeCache/%s.json",pokemonName));
+            String jsonString = Files.readString(cache);
+            return new JSONObject(jsonString);
+        } else {
+            return download(pokemonName);
+        }
+    }
+
+    public JSONObject download(String pokemonName) throws IOException{
+        System.out.println("Downloaded");
+        pokemonName = pokemonName.toLowerCase();
+        String urlString = String.format("https://pokeapi.co/api/v2/pokemon/%s",pokemonName);
         URL APICall = new URL(urlString);
         String json = IOUtils.toString(APICall, Charset.forName("UTF-8"));
+        FileWriter JSONfile = new FileWriter(String.format("pokerecomender/src/main/java/junior_is/caches/pokeCache/%s.json",pokemonName));
+        JSONfile.write(json);
+        JSONfile.close();
+        FileWriter cacheFile = new FileWriter("pokerecomender/src/main/java/junior_is/caches/pokeCache/.pokemon",true);
+        cacheFile.write("\n"+pokemonName);
+        cacheFile.close();
+        cachedMons.add(pokemonName);
         return new JSONObject(json);
     }
 
-    public Object[] getInfo(String PokemonName) throws IOException{
+    public Object[] getInfo(String pokemonName) throws IOException{
         Object[] returner = new Object[3];
-        JSONObject fullJSON = getJSON(PokemonName);
+        JSONObject fullJSON = getJSON(pokemonName);
         // Type
         String[] typesArr = new String[2];
         JSONArray types = fullJSON.getJSONArray("types");
@@ -47,14 +85,14 @@ public class InfoGen {
         return returner;
     }
 
-    public String getSprite(String PokemonName) throws IOException{
-        JSONObject fullJSON = getJSON(PokemonName);
+    public String getSprite(String pokemonName) throws IOException{
+        JSONObject fullJSON = getJSON(pokemonName);
         return fullJSON.getJSONObject("sprites").getJSONObject("other").getJSONObject("official-artwork").getString("front_default");
     }
 
-    public int[] getStats(String PokemonName) throws IOException{
+    public int[] getStats(String pokemonName) throws IOException{
         int[] returner = new int[6];
-        JSONObject fullJSON = getJSON(PokemonName);
+        JSONObject fullJSON = getJSON(pokemonName);
         JSONArray stats = fullJSON.getJSONArray("stats");
         for(int i = 0; i<stats.length(); i++) {
             JSONObject statsInf = (JSONObject) stats.get(i);
@@ -64,15 +102,27 @@ public class InfoGen {
         return returner;
 
     }
-    public String[] getTypes(String PokemonName) throws IOException{
+    public String[] getTypes(String pokemonName) throws IOException{
         String[] returner = new String[2];
-        JSONObject fullJSON = getJSON(PokemonName);
+        JSONObject fullJSON = getJSON(pokemonName);
         JSONArray types = fullJSON.getJSONArray("types");
         for(int i = 0; i<types.length(); i++) {
             JSONObject typeInf = (JSONObject) types.get(i);
             String type = typeInf.getJSONObject("type").getString("name");
             returner[i] = type;
-        }
+        } if (returner[1] == null){returner[1] = "";}
         return returner;
+    }
+    public static void main(String[] args) throws IOException {
+        InfoGen c = new InfoGen();
+        String[] q = c.getTypes("pichu");
+        for (String d : q){
+            System.out.println(d);
+        }
+        q = c.getTypes("flareon");
+        for (String d : q){
+            System.out.println(d);
+        }
+
     }
 }

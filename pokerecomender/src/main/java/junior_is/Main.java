@@ -9,51 +9,21 @@ import java.util.Arrays;
 // Core
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 import java.io.File;
 import java.util.function.IntConsumer;
 
 /*
-Full list of imports used anywhere within the project as follows:
+ *
+ *
+ */
 
-// Exceptions
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-
-// Core
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.awt.*;
-import java.io.File;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.function.IntConsumer;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
-import javax.imageio.ImageIO;
-import javax.swing.plaf.basic.BasicSpinnerUI;
-import javax.swing.*;
-
-// 3rd party
-import net.miginfocom.swing.*;
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.apache.commons.io.IOUtils;
-
-*/
 public class Main {
 
     public SmogonParser parser; // reads in smogon json file || can return Pokemon Names
     public InfoGen pokeGenerator; // PokeAPI access
+    public TypeBot typeChecker;
 
     public GUI mainWindow; // 我恨恨恨这个东西
 
@@ -61,13 +31,28 @@ public class Main {
 
     public Main() throws MalformedURLException, IOException{
         pokeGenerator = new InfoGen();
+        typeChecker = new TypeBot();
         parser = new SmogonParser("https://www.smogon.com/stats/2024-01/chaos/gen3ou-1760.json");
         Iterator<String> pokemonItt = parser.getPokemon();
         List<String> pokemonList = new ArrayList<>();
         pokemonList.add("                ");
+        //pokemonList.add("Bisharp"); // for testing the type gen. This is supposed to break the gui display dw
         pokemonItt.forEachRemaining(pokemonList::add);
         String[] pokemonArr = Arrays.copyOf(pokemonList.toArray(), pokemonList.toArray().length, String[].class);
-        mainWindow = new GUI(new File("pokerecomender\\src\\main\\resources\\items.txt"));
+
+        Scanner iStream = new Scanner(new File("pokerecomender\\src\\main\\resources\\items.txt"));
+        String itemStr = "                ,";
+        while(iStream.hasNext()){
+            String item = iStream.nextLine();
+            itemStr += item+",";
+        } iStream.close();
+        try{
+            itemStr = itemStr.substring(0,itemStr.length()-1);
+        } catch(IndexOutOfBoundsException e){
+            System.out.println("No Item CSV btw"); // theres a what to do on the teampanel for empty itemsets dw
+        } String[] itemArr = itemStr.split(",");
+        mainWindow = new GUI(itemArr);
+
         int i = 0;
         int j = 0;
         int l = 0;
@@ -106,15 +91,17 @@ public class Main {
             p.abilityNames.addActionListener(aL);
             CatListener naL = new CatListener(j,natureConsumer);
             p.natureNames.addActionListener(naL);
+            j++;
 
             // Spread listeners
             for (int k = 0; k < 6; k++){
                 SpreadListener sL = new SpreadListener(l,spreadConsumer);
                 p.spinners[k].addChangeListener(sL);
+                l++;
             }
-
             mainWindow.updatePokemonList(p, pokemonArr);
         }
+        //this.getDefTypal();
     }
 
     /* 
@@ -127,8 +114,9 @@ public class Main {
      * -----------------------------------------------------------------------------------------------------
      */
 
-    public void LaserPointer(int listenerUID){ // test function for consumers
+    public String LaserPointer(int listenerUID){ // test function for consumers
         System.out.println(String.format("%d fired",listenerUID));
+        return "Hi";
     }
     public void nameUpdated(int listenerUID) throws MalformedURLException, IOException { // changing the selected name updates sprite, movepool, and abilities
         String item = (String) mainWindow.teamPanels[listenerUID].pokemonNames.getSelectedItem();
@@ -169,28 +157,28 @@ public class Main {
         System.out.println(item);
     }
     public void spreadUpdated(int listenerUID) {
+        System.out.println(listenerUID);
         int panel = (int) Math.floor(listenerUID/6.);
         int box = (int) Math.floor(listenerUID%6.);
         int item = (int) mainWindow.teamPanels[panel].spinners[box].getValue();
         System.out.println(item);
     }
-    public void getInfo(){
-        System.out.println("help");
-        String[] pokemonNames = new String[6];
-        double[] pokemonUsage = new double[6];
-        int itt = 0;
-        for (TeamPanel x : this.mainWindow.teamPanels){
-            String name = (String) x.pokemonNames.getSelectedItem();
-            if (name.replaceAll("\\s", "") == ""){
-                ;
-            } else {
-                double usage = parser.getUsage(name);
-                pokemonNames[itt] = name;
-                pokemonUsage[itt++] = usage;
+    public void getDefTypal() throws IOException{
+        String[] names = new String[]{
+            "normal","fire","water","electric","grass","ice","fighting","poison","ground",
+            "flying","psychic","bug","rock","ghost","dragon","dark","steel"};
+        double[] typeSums = new double[18];
+        Arrays.fill(typeSums, 0);
+        for (int i=0;i<6;i++){
+            String item = (String) mainWindow.teamPanels[i].pokemonNames.getSelectedItem();
+            String[] types = pokeGenerator.getTypes(item);
+            for (int j = 0; j < names.length; j++) {
+                double c = typeChecker.typeMatch(names[j], types[0],types[1]);
+                typeSums[j] += c;
             }
         }
-        for (int qwerty = 0; qwerty<itt; qwerty++){
-            System.out.println(pokemonNames[qwerty]+" : "+Double.toString(pokemonUsage[qwerty]));
+        for (int i = 0; i < names.length; i++) {
+            System.out.println(names[i]+": "+typeSums[i]);
         }
     }
     public static void main(String[] args) throws MalformedURLException, IOException{
