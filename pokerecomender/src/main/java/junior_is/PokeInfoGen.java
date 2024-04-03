@@ -20,11 +20,11 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.apache.commons.io.IOUtils;
 
-public class InfoGen {
+public class PokeInfoGen {
 
     List<String> cachedMons = new ArrayList<String>();
 
-    public InfoGen() throws FileNotFoundException{ // grab the list of cached files
+    public PokeInfoGen() throws FileNotFoundException{ // grab the list of cached files
         Scanner iStream = new Scanner(new File("pokerecomender/src/main/java/junior_is/caches/pokeCache/.pokemon"));
         while(iStream.hasNext()){
             String item = iStream.nextLine();
@@ -113,16 +113,32 @@ public class InfoGen {
         } if (returner[1] == null){returner[1] = "";}
         return returner;
     }
+    public String[] getMoves(String pokemonName) throws IOException{
+        JSONObject fullJSON = getJSON(pokemonName);
+        JSONArray moves = fullJSON.getJSONArray("moves");
+        String[] ret = new String[moves.length()+1];
+        ret[0] = "                   ";
+        for (int i = 0; i < moves.length(); i++) {
+            JSONObject moveInfo = (JSONObject) moves.get(i);
+            String moveName = moveInfo.getJSONObject("move").getString("name");
+            ret[i+1] = moveName;
+        }
+        return ret;
+    }
+    public String[] getAbilities(String pokemonName) throws IOException{
+        JSONObject fullJSON = getJSON(pokemonName);
+        JSONArray abilities = fullJSON.getJSONArray("abilities");
+        String[] ret = new String[abilities.length()+1];
+        ret[0] = "                   ";
+        for (int i = 0; i < abilities.length(); i++) {
+            JSONObject abilityInfo = (JSONObject) abilities.get(i);
+            String abilityName = abilityInfo.getJSONObject("ability").getString("name");
+            ret[i+1] = abilityName;
+        }
+        return ret;
+    }
     public static void main(String[] args) throws IOException {
-        InfoGen c = new InfoGen();
-        String[] q = c.getTypes("pichu");
-        for (String d : q){
-            System.out.println(d);
-        }
-        q = c.getTypes("flareon");
-        for (String d : q){
-            System.out.println(d);
-        }
-
+        PokeInfoGen c = new PokeInfoGen();
+        c.getAbilities("pichu");
     }
 }

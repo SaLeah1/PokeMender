@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 import java.io.File;
 import java.util.function.IntConsumer;
 
@@ -22,7 +21,9 @@ import java.util.function.IntConsumer;
 public class Main {
 
     public SmogonParser parser; // reads in smogon json file || can return Pokemon Names
-    public InfoGen pokeGenerator; // PokeAPI access
+    public PokeInfoGen pokeGenerator; // PokeAPI access for pokemon info
+    public MoveInfoGen moveGenerator;  // PokeAPI access for move info (literally only for move type :/)
+
     public TypeBot typeChecker;
 
     public GUI mainWindow; // 我恨恨恨这个东西
@@ -30,18 +31,19 @@ public class Main {
     public CatListener[] moveListeners;
 
     public Main() throws MalformedURLException, IOException{
-        pokeGenerator = new InfoGen();
+        pokeGenerator = new PokeInfoGen();
+        moveGenerator = new MoveInfoGen();
         typeChecker = new TypeBot();
         parser = new SmogonParser("https://www.smogon.com/stats/2024-01/chaos/gen3ou-1760.json");
         Iterator<String> pokemonItt = parser.getPokemon();
         List<String> pokemonList = new ArrayList<>();
-        pokemonList.add("                ");
+        pokemonList.add("                   ");
         //pokemonList.add("Bisharp"); // for testing the type gen. This is supposed to break the gui display dw
         pokemonItt.forEachRemaining(pokemonList::add);
         String[] pokemonArr = Arrays.copyOf(pokemonList.toArray(), pokemonList.toArray().length, String[].class);
 
         Scanner iStream = new Scanner(new File("pokerecomender\\src\\main\\resources\\items.txt"));
-        String itemStr = "                ,";
+        String itemStr = "                   ,";
         while(iStream.hasNext()){
             String item = iStream.nextLine();
             itemStr += item+",";
@@ -120,22 +122,17 @@ public class Main {
     }
     public void nameUpdated(int listenerUID) throws MalformedURLException, IOException { // changing the selected name updates sprite, movepool, and abilities
         String item = (String) mainWindow.teamPanels[listenerUID].pokemonNames.getSelectedItem();
-        if(item=="                "){ // if the empty name is selected, reset everything
+        if(item=="                   "){ // if the empty name is selected, reset everything
             mainWindow.setNull(mainWindow.teamPanels[listenerUID]);
         } else {
-            Set<String> moveSet = parser.getTAMIData(item,"Moves").keySet();
-            String[] moves = new String[moveSet.size()];
-            int k = 0; 
-            for (String x : moveSet){moves[k++] = x;} // small loops can be written in one line if you hate your readers <3
-            moves[0] = "                ";
-            Set<String> abilSet = parser.getTAMIData(item,"Abilities").keySet();
-            String[] abil = new String[abilSet.size()+1]; // +1 to include the blank
-            k = 1;
-            for (String ability : abilSet){abil[k++] = ability;}
-            abil[0] = "                ";
+            String[] moves = pokeGenerator.getMoves(item);
+            String[] abil = pokeGenerator.getAbilities(item);
             mainWindow.updateSprite(mainWindow.teamPanels[listenerUID], pokeGenerator.getSprite(item));
             mainWindow.updateMovesList(mainWindow.teamPanels[listenerUID], moves);
             mainWindow.updateAbilitiesList(mainWindow.teamPanels[listenerUID], abil);
+            if(listenerUID == 5){
+                getOffTypal();
+            }
         }
     }
     public void moveUpdated(int listenerUID){
@@ -175,6 +172,30 @@ public class Main {
             for (int j = 0; j < names.length; j++) {
                 double c = typeChecker.typeMatch(names[j], types[0],types[1]);
                 typeSums[j] += c;
+            }
+        }
+        for (int i = 0; i < names.length; i++) {
+            System.out.println(names[i]+": "+typeSums[i]);
+        }
+    }
+    public void getOffTypal() throws IOException{
+        String[] names = new String[]{
+            "normal","fire","water","electric","grass","ice","fighting","poison","ground",
+            "flying","psychic","bug","rock","ghost","dragon","dark","steel"};
+        double[] typeSums = new double[18];
+        Arrays.fill(typeSums,0);
+        for (int i=0;i<6;i++){
+            for (int x=0;x<4;x++){
+                String item = (String) mainWindow.teamPanels[i].moveBoxes[x].getSelectedItem();
+                if (item != "                   "){
+                    String[] dTypes = moveGenerator.getMoveType(item);
+                    for (int j = 0; j < names.length; j++) {
+                        if (dTypes[1] != "status"){
+                            double c = typeChecker.typeMatch(dTypes[0], names[j]);
+                            typeSums[j] += c;
+                        }
+                    }
+                }
             }
         }
         for (int i = 0; i < names.length; i++) {

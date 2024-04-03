@@ -77,7 +77,7 @@ public class GUI extends JFrame{
         p.repaint();
     }
     public void setNull(TeamPanel p) throws MalformedURLException, IOException{
-        String[] tempAbilities = new String[]{"                ","Select a Pokemon"};
+        String[] tempAbilities = new String[]{"                   ","Select a Pokemon"};
         String[] tempMoves = new String[]{"                   ","Select a Pokemon"};
         updateMovesList(p, tempMoves);
         updateAbilitiesList(p, tempAbilities);

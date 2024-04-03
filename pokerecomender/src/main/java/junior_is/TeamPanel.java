@@ -169,10 +169,10 @@ public class TeamPanel extends JPanel{
             "10[170!, center]10",
             "0[20!, center]10[20!, center]10[20!, center]10"
         ));
-        String[] tempAbilities = new String[]{"                ","Select a Pokemon"};
-        String[] tempItems = new String[]{"                ","No Item CSV Loaded"};
+        String[] tempAbilities = new String[]{"                   ","Select a Pokemon"};
+        String[] tempItems = new String[]{"                   ","No Item CSV Loaded"};
         String[] natures = new String[]{
-            "                ",
+            "                   ",
             "Adamant/ATK/SPA",
             "Bashful/Neutral",
             "Bold/DEF/ATK",
