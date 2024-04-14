@@ -1,0 +1,1 @@
+pelipper,drizzle,<span-class="type-water">damp-rock</span>,u-turn,weather-ball,hurricane,roost

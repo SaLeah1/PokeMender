@@ -1,0 +1,1 @@
+gliscor,poison-heal,toxic-orb,earthquake,knock-off,protect,toxic

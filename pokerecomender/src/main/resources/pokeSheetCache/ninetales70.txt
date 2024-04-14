@@ -1,0 +1,1 @@
+ninetales,drought,<span-class="type-fire">heat-rock</span>,hypnosis,encore,solar-beam,fire-blast

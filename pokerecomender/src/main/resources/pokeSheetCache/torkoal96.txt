@@ -1,0 +1,1 @@
+torkoal,drought,<span-class="type-fire">heat-rock</span>,stealth-rock,flamethrower,rapid-spin,yawn

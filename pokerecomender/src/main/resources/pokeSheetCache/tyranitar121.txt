@@ -1,0 +1,1 @@
+tyranitar,sand-stream,<span-class="type-rock">smooth-rock</span>,stealth-rock,ice-beam,thunder-wave,rock-blast

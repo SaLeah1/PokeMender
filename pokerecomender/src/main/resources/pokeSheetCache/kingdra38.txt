@@ -1,0 +1,1 @@
+kingdra,swift-swim,choice-specs,weather-ball,draco-meteor,hydro-pump,ice-beam

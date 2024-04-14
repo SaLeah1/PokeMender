@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +16,7 @@ import java.util.Scanner;
 // NOTE: Because iron moth just wasnt labled on PokeAIMMD the bot gets a little 
 // bit screwy and replaces where its name should be with a block of code
 
-public class PasteEater {
+public class PokeAimMDScraper {
     public static String genString(URL website) throws IOException{
         String ret = "";
         BufferedReader in = new BufferedReader(
@@ -30,7 +29,7 @@ public class PasteEater {
         in.close();
         return ret;
     }
-    public static Object[] huffGlue(String code) throws IOException{
+    public static Object[] processSource(String code) throws IOException{
         int indx = code.indexOf("<div class=\"sqs-gallery\">");
         int end = code.indexOf("<div id=\"footerWrapper\">");
         code = code.substring(indx,end);
@@ -55,7 +54,7 @@ public class PasteEater {
         }
         return new Object[]{pokemonNames,};
     }
-    public static void munchMarker() throws IOException{
+    public static void pokePasteScrape() throws IOException{
         List<String> pasteLinks = new ArrayList<String>();
         Scanner iStream = new Scanner(new File("pokerecomender\\src\\main\\java\\junior_is\\pastes.txt"));
         while(iStream.hasNext()){
@@ -66,6 +65,7 @@ public class PasteEater {
         Iterator<String> itt = pasteLinks.iterator();
         MoveInfoGen berry = new MoveInfoGen();
         TypeBot jerry = new TypeBot();
+        PokeInfoGen larry = new PokeInfoGen();
         while(itt.hasNext()){
             System.out.println(counter);
             counter++;
@@ -74,7 +74,7 @@ public class PasteEater {
             String[] sateth = takeBite(code);
             code = sateth[0];
             String info = sateth[1];
-            genVector(info, berry, jerry, counter);
+            genVector(info, berry, larry, jerry, counter);
             code = code.substring(code.indexOf("</pre>"),code.indexOf("<aside>")-23);
             while(code.contains("</pre>")){
                 if (code.substring(0,code.indexOf("<pre>")+4).contains("<img class=\"img-pokemon\" src=\"/img/pokemon/0-0.png\">")){
@@ -83,7 +83,7 @@ public class PasteEater {
                 sateth = takeBite(code);
                 code = sateth[0];
                 info = sateth[1];     
-                genVector(info, berry, jerry, counter);
+                genVector(info, berry, larry, jerry, counter);
             }
         }
 
@@ -94,14 +94,29 @@ public class PasteEater {
         String name = code.substring(0, end).toLowerCase();
         if (name.contains("span class=\"type-")){
             name = name.substring(name.indexOf(">")+1, name.indexOf("</span>"));
-        }
-        if (name.substring(name.length())==" "){
-            name = name.substring(0,name.length()-1);
-        }
-        if (name.contains("(<span class=\"gender")){
+        } if (name.contains("(<span class=\"gender")){
             name = name.substring(0, name.indexOf("(")-1);
-        }
+        } 
         name = name.replaceAll(" ", "-");
+        if (name.substring(name.length()-1).equals("-")){
+            name = name.substring(0,name.length()-1);
+        } // for names that arent represented correctly
+        if ((
+            name.contains("tornadus") || 
+            name.contains("thundurus") ||
+            name.contains("landorus") ||
+            name.contains("enamorus")
+            ) &&
+            !name.contains("-therian")){ // if its a genie, add the correct ending
+            name = name+"-incarnate";
+        } 
+        if (name.contains("meloetta")){name += "-aria";} 
+        if (name.equals("igant-hisui")){name = "lilligant-hisui";}
+        if (name.equals("arunt")){name = "pecharunt";}
+        if (name.equals("-boulder")){name = "iron-boulder";}
+        if (name.equals("-crown")){name = "iron-crown";}
+        if (name.equals("indeedee")){name = "indeedee-female";}
+        if (name.equals("minior")){name = "minior-blue";}
         String item = code.substring(end+2,code.indexOf("\n")-2).toLowerCase();
         item = item.replaceAll(" ", "-");
         code = code.substring(code.indexOf("\n")+1);
@@ -142,7 +157,7 @@ public class PasteEater {
         System.out.println      (name+","+ability+","+item+","+move1+","+move2+","+move3+","+move4);
         return new String[]{code,name+","+ability+","+item+","+move1+","+move2+","+move3+","+move4};
     }
-    public static void genVector(String info, MoveInfoGen moveGenerator, TypeBot typeChecker, int counter) throws IOException{
+    public static void genVector(String info, MoveInfoGen moveGenerator, PokeInfoGen pokeGenerator, TypeBot typeChecker, int counter) throws IOException{
         String[] parts = info.split(",");
         String[] names = new String[]{
             "normal","fire","water","electric","grass","ice","fighting","poison","ground",
@@ -166,24 +181,41 @@ public class PasteEater {
                 }
             }
         }
+        double[] defSums = new double[18];
+        Arrays.fill(typeSums,0);
+        String item = parts[0];
+        String[] types = new String[]{" "," "};
+        try {
+            types = pokeGenerator.getTypes(item);
+        } catch (Exception e) {
+            return;
+        }
+        
+        for (int j = 0; j < names.length; j++) {
+                double c = typeChecker.typeMatch(names[j],types[0],types[1]);
+                defSums[j] += c;
+            } 
         FileWriter samantha = new FileWriter(
-            String.format("pokerecomender\\src\\main\\java\\junior_is\\caches\\pokeVectorCache\\%s%d.vect",parts[0],counter)
+            String.format("pokerecomender\\src\\main\\resources\\pokeVectorCache\\%s%d.vect",parts[0],counter)
             );
         FileWriter sasha = new FileWriter(
-            String.format("pokerecomender\\src\\main\\java\\junior_is\\caches\\pokeSheetCache\\%s%d.txt",parts[0],counter)
+            String.format("pokerecomender\\src\\main\\resources\\pokeSheetCache\\%s%d.txt",parts[0],counter)
             );
-      sasha.write(info+"\n");
-      sasha.close();
+        sasha.write(info+"\n");
+        sasha.close();
         for (Double val : typeSums){
+            samantha.write(val+"\n");
+        }
+        for (Double val : defSums){
             samantha.write(val+"\n");
         }
         samantha.write((offC/4.)+"\n");
         samantha.write((defC/4.)+"");
         samantha.close();
     }
-    public static void main(String[] args) throws MalformedURLException, IOException {
-        //PasteEater.huffGlue(PasteEater.genString(new URL("https://www.pokeaimmd.com/overused")));
-        munchMarker();
+    public static void main(String[] args) throws IOException {
+        //PokeAimMDScraper.processSource(PokeAimMDScraper.genString(new URL("https://www.pokeaimmd.com/overused")));
+        pokePasteScrape();
 
     }
 }

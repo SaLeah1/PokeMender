@@ -1,0 +1,1 @@
+electrode-hisui,static,choice-specs,thunderbolt,volt-switch,leaf-storm,tera-blast

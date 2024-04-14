@@ -1,0 +1,1 @@
+empoleon,competitive,<span-class="type-water">mystic-water</span>,hydro-pump,ice-beam,air-slash,agility

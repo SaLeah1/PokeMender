@@ -2,4 +2,6 @@ pokerecomender/src/main/java/junior_is/caches/moveCache/*
 pokerecomender/src/main/java/junior_is/caches/pokeCache/*
 pokerecomender/target/classes/junior_is/caches/moveCache/*
 pokerecomender/target/classes/junior_is/caches/pokeCache/*
+pokerecomender/target/classes/pokeSheetCache/*
+pokerecomender/target/classes/pokeVectorCache/*
 pokerecomender/src/main/java/junior_is/pastes.txt

@@ -1,0 +1,1 @@
+magnezone,magnet-pull,choice-specs,thunderbolt,volt-switch,flash-cannon,tera-blast
