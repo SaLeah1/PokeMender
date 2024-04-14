@@ -168,21 +168,19 @@ public class PokeAimMDScraper {
         Arrays.fill(typeSums,0);
         for (int x=3;x<7;x++){
             String item = parts[x];
-            if (item != "                   "){
-                String[] dTypes = moveGenerator.getMoveType(item);
-                if (!dTypes[1].equals("status")){
-                    offC += 1;
-                    for (int j = 0; j < names.length; j++) {
-                            double c = typeChecker.typeMatch(dTypes[0], names[j]);
-                            typeSums[j] += c;
-                        } 
-                } else {
-                    defC += 1;
-                }
+            String[] dTypes = moveGenerator.getMoveType(item);
+            if (!dTypes[1].equals("status")){
+                offC += 1;
+                for (int j = 0; j < names.length; j++) {
+                        double c = typeChecker.typeMatch(dTypes[0], names[j]);
+                        typeSums[j] += c;
+                    } 
+            } else {
+                defC += 1;
             }
         }
         double[] defSums = new double[18];
-        Arrays.fill(typeSums,0);
+        Arrays.fill(defSums,0);
         String item = parts[0];
         String[] types = new String[]{" "," "};
         try {
@@ -204,7 +202,7 @@ public class PokeAimMDScraper {
         sasha.write(info+"\n");
         sasha.close();
         for (Double val : typeSums){
-            samantha.write(val+"\n");
+            samantha.write(val/offC+"\n");
         }
         for (Double val : defSums){
             samantha.write(val+"\n");
