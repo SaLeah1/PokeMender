@@ -34,9 +34,9 @@ public class MoveInfoGen {
     public JSONObject getJSON(String moveName) throws IOException{
         moveName = moveName.toLowerCase();
         if (cachedMoves.contains(moveName)){
-            System.out.println("got");
+            //System.out.println("got");
             Path cache = Path.of(String.format("pokerecomender/src/main/java/junior_is/caches/moveCache/%s.json",moveName));
-            String jsonString = Files.readString(cache);
+            String jsonString = Files.readString(cache,Charset.forName("UTF-8"));
             return new JSONObject(jsonString);
         } else {
             return download(moveName);

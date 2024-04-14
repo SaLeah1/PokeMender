@@ -1,2 +1,5 @@
-pokerecomender/src/main/java/junior_is/caches/*
-pokerecomender/target/classes/junior_is/caches/*
+pokerecomender/src/main/java/junior_is/caches/moveCache/*
+pokerecomender/src/main/java/junior_is/caches/pokeCache/*
+pokerecomender/target/classes/junior_is/caches/moveCache/*
+pokerecomender/target/classes/junior_is/caches/pokeCache/*
+pokerecomender/src/main/java/junior_is/pastes.txt

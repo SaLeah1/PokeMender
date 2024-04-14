@@ -103,7 +103,6 @@ public class Main {
             }
             mainWindow.updatePokemonList(p, pokemonArr);
         }
-        //this.getDefTypal();
     }
 
     /* 
