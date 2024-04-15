@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Map.Entry;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,8 +24,11 @@ public class TeamComparator {
         getDataFromFile();
     }
 
-    public Map<String,Double> compareToData(double[] teamVector){
+    public Map<String,Double> compareToData(double[] teamVector) throws FileNotFoundException{
         Map<String,Double> similarityList = new HashMap<String,Double>();
+        for (int i = 0; i < teamVector.length-2; i++) { // invert def and off totals to find things that complement
+            teamVector[i] *= -1;
+        }
         for (Entry<double[],String> entrySet : this.vectors.entrySet()) {
             double[] monVector = entrySet.getKey();
             String fileName = entrySet.getValue();
@@ -32,9 +37,22 @@ public class TeamComparator {
         }
         similarityList = sortHashMap(similarityList);
         int count = 0 ;
+        List<String> recommendedMons = new ArrayList<String>();
         for (Entry<String,Double> entrySet : similarityList.entrySet()) {
-            System.out.println(entrySet.getKey()+" "+entrySet.getValue());
-            //count++;
+            String name = entrySet.getKey();
+            Matcher matcher = Pattern.compile("\\d+").matcher(name);
+            matcher.find();
+            String nums = matcher.group();
+            name = name.substring(0,name.indexOf(nums));
+            if (!recommendedMons.contains(name)){
+                //System.out.println(name+": "+entrySet.getKey()+" "+entrySet.getValue());
+                Scanner s = new Scanner(new File(
+                    String.format("pokerecomender\\src\\main\\resources\\pokeSheetCache\\%s.txt",entrySet.getKey())));
+                System.out.println(s.nextLine().replaceAll(",",", "));
+                s.close();
+                recommendedMons.add(name);
+                count++;
+            }
             if(count>10){break;}
         }
         return similarityList;
@@ -81,7 +99,7 @@ public class TeamComparator {
         // Sort the list
         Collections.sort(listedMap, new Comparator<Map.Entry<String, Double>>() { // sort using the compare function defined internally
             public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2){
-                return (o1.getValue()).compareTo(o2.getValue());
+                return (o2.getValue()).compareTo(o1.getValue());
             }
         });
         // listedMap is now a collection of bootleg doubles sorted by the value (2nd item)
@@ -96,9 +114,14 @@ public class TeamComparator {
     public static void main(String[] args) throws IOException {
         TeamComparator comparator = new TeamComparator();
         Compressor c = new Compressor();
-        String[] t1 = new String[]{"zapdos","damp-rock","pressure","hurricane","volt-switch","heat-wave","roost"};
-        String[] t2 = new String[]{"articuno","damp-rock","pressure","roost","freeze-dry","u-turn","brave-bird"};
-        double[] compressedTeam = c.CompressTeam(new String[][]{t1,t2});
+        //String[] t1 = new String[]{"zapdos","damp-rock","pressure","hurricane","volt-switch","heat-wave","roost"};
+        //String[] t2 = new String[]{"articuno","damp-rock","pressure","roost","freeze-dry","u-turn","brave-bird"};
+        String[] t1 = new String[]{"darkrai","expert-belt","bad-dreams","ice-beam","sludge-bomb","dark-pulse","focus-blast"};
+        String[] t2 = new String[]{"roaring-moon","booster-energy","protosynthesis","dragon-dance","acrobatics","knock-off","taunt"};
+        String[] t3 = new String[]{"glimmora","red-card","toxic-debris","stealth-rock","mortal-spin","earth-power","power-gem"};
+        String[] t4 = new String[]{"kingambit","air-balloon","supreme-overlord","swords-dance","sucker-punch","kowtow-cleave","iron-head"};
+        String[] t5 = new String[]{"zamazenta","leftovers","dauntless-shield","iron-defense","body-press","heavy-slam","roar"};
+        double[] compressedTeam = c.CompressTeam(new String[][]{t1,t2,t2,t3,t4,t5});
         comparator.compareToData(compressedTeam);
     }
 }
