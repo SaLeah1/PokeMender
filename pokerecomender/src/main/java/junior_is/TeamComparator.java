@@ -114,14 +114,19 @@ public class TeamComparator {
     public static void main(String[] args) throws IOException {
         TeamComparator comparator = new TeamComparator();
         Compressor c = new Compressor();
-        //String[] t1 = new String[]{"zapdos","damp-rock","pressure","hurricane","volt-switch","heat-wave","roost"};
-        //String[] t2 = new String[]{"articuno","damp-rock","pressure","roost","freeze-dry","u-turn","brave-bird"};
+        List<String[]> teamList = new ArrayList<String[]>();
         String[] t1 = new String[]{"darkrai","expert-belt","bad-dreams","ice-beam","sludge-bomb","dark-pulse","focus-blast"};
         String[] t2 = new String[]{"roaring-moon","booster-energy","protosynthesis","dragon-dance","acrobatics","knock-off","taunt"};
         String[] t3 = new String[]{"glimmora","red-card","toxic-debris","stealth-rock","mortal-spin","earth-power","power-gem"};
         String[] t4 = new String[]{"kingambit","air-balloon","supreme-overlord","swords-dance","sucker-punch","kowtow-cleave","iron-head"};
-        String[] t5 = new String[]{"zamazenta","leftovers","dauntless-shield","iron-defense","body-press","heavy-slam","roar"};
-        double[] compressedTeam = c.CompressTeam(new String[][]{t1,t2,t2,t3,t4,t5});
+        //String[] t5 = new String[]{"zamazenta","leftovers","dauntless-shield","iron-defense","body-press","heavy-slam","roar"};
+        String[] t5 = new String[]{"enamorus-incarnate","choice-scarf","contrary","moonblast","earth-power","mystical-fire","healing-wish"};
+        teamList.add(t1);
+        teamList.add(t2);
+        teamList.add(t3);
+        teamList.add(t4);
+        teamList.add(t5);
+        double[] compressedTeam = c.CompressTeam(teamList);
         comparator.compareToData(compressedTeam);
     }
 }

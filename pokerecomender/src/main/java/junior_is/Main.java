@@ -22,9 +22,12 @@ public class Main {
 
     public SmogonParser parser; // reads in smogon json file || can return Pokemon Names
     public PokeInfoGen pokeGenerator; // PokeAPI access for pokemon info
-    public MoveInfoGen moveGenerator;  // PokeAPI access for move info (literally only for move type :/)
+    public MoveInfoGen moveGenerator;  // PokeAPI access for move info
 
-    public TypeBot typeChecker;
+    public TypeBot typeChecker; // creates vector of type match up between an offenseive and 1/2 defensive types
+
+    public Compressor compressor;
+    public TeamComparator teamComparator;
 
     public GUI mainWindow; // 我恨恨恨这个东西
 
@@ -34,7 +37,9 @@ public class Main {
         pokeGenerator = new PokeInfoGen();
         moveGenerator = new MoveInfoGen();
         typeChecker = new TypeBot();
-        parser = new SmogonParser("https://www.smogon.com/stats/2024-01/chaos/gen3ou-1760.json");
+        compressor = new Compressor();
+        teamComparator = new TeamComparator();
+        parser = new SmogonParser("https://www.smogon.com/stats/2024-03/chaos/gen9ou-0.json");
         Iterator<String> pokemonItt = parser.getPokemon();
         List<String> pokemonList = new ArrayList<>();
         pokemonList.add("                   ");
@@ -130,7 +135,7 @@ public class Main {
             mainWindow.updateMovesList(mainWindow.teamPanels[listenerUID], moves);
             mainWindow.updateAbilitiesList(mainWindow.teamPanels[listenerUID], abil);
             if(listenerUID == 5){
-                getOffTypal();
+                generateInfoArray();
             }
         }
     }
@@ -138,68 +143,50 @@ public class Main {
         int panel = (int) Math.floor(listenerUID/4.);
         int slot = (int) Math.floor(listenerUID%4.);
         String item = (String) mainWindow.teamPanels[panel].moveBoxes[slot].getSelectedItem();
-        System.out.println(item);
+        //System.out.println(item);
     }
     public void itemUpdated(int listenerUID){
         String item = (String) mainWindow.teamPanels[listenerUID].itemNames.getSelectedItem();
-        System.out.println(item);
+        //System.out.println(item);
     }
     public void abilityUpdated(int listenerUID){
         String item = (String) mainWindow.teamPanels[listenerUID].abilityNames.getSelectedItem();
-        System.out.println(item);
+        //System.out.println(item);
     }
     public void natureUpdated(int listenerUID){
         String item = (String) mainWindow.teamPanels[listenerUID].natureNames.getSelectedItem();
-        System.out.println(item);
+        //System.out.println(item);
     }
     public void spreadUpdated(int listenerUID) {
         System.out.println(listenerUID);
         int panel = (int) Math.floor(listenerUID/6.);
         int box = (int) Math.floor(listenerUID%6.);
         int item = (int) mainWindow.teamPanels[panel].spinners[box].getValue();
-        System.out.println(item);
+        //System.out.println(item);
     }
-    public void getDefTypal() throws IOException{
-        String[] names = new String[]{
-            "normal","fire","water","electric","grass","ice","fighting","poison","ground",
-            "flying","psychic","bug","rock","ghost","dragon","dark","steel"};
-        double[] typeSums = new double[18];
-        Arrays.fill(typeSums, 0);
-        for (int i=0;i<6;i++){
-            String item = (String) mainWindow.teamPanels[i].pokemonNames.getSelectedItem();
-            String[] types = pokeGenerator.getTypes(item);
-            for (int j = 0; j < names.length; j++) {
-                double c = typeChecker.typeMatch(names[j], types[0],types[1]);
-                typeSums[j] += c;
+    public void generateInfoArray() throws IOException{
+        List<String[]> teamInfo = new ArrayList<String[]>();
+        for (int i=0; i<5; i++){
+            if (mainWindow.teamPanels[i].pokemonNames.getSelectedItem()!="                   "){
+                String[] monInfo = new String[7];
+                monInfo[0] = (String) mainWindow.teamPanels[i].pokemonNames.getSelectedItem();
+                monInfo[1] = (String) mainWindow.teamPanels[i].itemNames.getSelectedItem();
+                monInfo[2] = (String) mainWindow.teamPanels[i].abilityNames.getSelectedItem();
+                monInfo[3] = (String) mainWindow.teamPanels[i].moveOneBox.getSelectedItem();
+                monInfo[4] = (String) mainWindow.teamPanels[i].moveTwoBox.getSelectedItem();
+                monInfo[5] = (String) mainWindow.teamPanels[i].moveThreeBox.getSelectedItem();
+                monInfo[6] = (String) mainWindow.teamPanels[i].moveFourBox.getSelectedItem();
+                teamInfo.add(monInfo);
             }
         }
-        for (int i = 0; i < names.length; i++) {
-            System.out.println(names[i]+": "+typeSums[i]);
-        }
-    }
-    public void getOffTypal() throws IOException{
-        String[] names = new String[]{
-            "normal","fire","water","electric","grass","ice","fighting","poison","ground",
-            "flying","psychic","bug","rock","ghost","dragon","dark","steel"};
-        double[] typeSums = new double[18];
-        Arrays.fill(typeSums,0);
-        for (int i=0;i<6;i++){
-            for (int x=0;x<4;x++){
-                String item = (String) mainWindow.teamPanels[i].moveBoxes[x].getSelectedItem();
-                if (item != "                   "){
-                    String[] dTypes = moveGenerator.getMoveType(item);
-                    for (int j = 0; j < names.length; j++) {
-                        if (dTypes[1] != "status"){
-                            double c = typeChecker.typeMatch(dTypes[0], names[j]);
-                            typeSums[j] += c;
-                        }
-                    }
-                }
+        for(String[] mon : teamInfo){
+            for(String thing : mon){
+                System.out.println(thing);
             }
         }
-        for (int i = 0; i < names.length; i++) {
-            System.out.println(names[i]+": "+typeSums[i]);
-        }
+        double[] teamVector = compressor.CompressTeam(teamInfo);
+        teamComparator.compareToData(teamVector);
+
     }
     public static void main(String[] args) throws MalformedURLException, IOException{
         new Main();

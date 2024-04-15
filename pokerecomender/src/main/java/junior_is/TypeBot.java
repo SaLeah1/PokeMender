@@ -49,11 +49,11 @@ public class TypeBot {
         }
         double val = this.vals[offIndx][def1Indx]*this.vals[offIndx][def2Indx];
         if(val==0){val = -3.;}
-        if(val==0.25){val = -2.;}
-        if(val==0.5){val = -1.;}
-        if(val==0.){val = 0.;}
-        if(val==0){val = 1.;}
-        if(val==0){val = 2.;}
+        else if(val==0.25){val = -2.;}
+        else if(val==0.5){val = -1.;}
+        else if(val==0.){val = 0.;}
+        else if(val==0.){val = 1.;}
+        else if(val==0.){val = 2.;}
         return val;
     }
     public static void main(String[] args) {

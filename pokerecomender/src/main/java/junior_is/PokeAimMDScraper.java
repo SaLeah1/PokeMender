@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 // NOTE: Because iron moth just wasnt labled on PokeAIMMD the bot gets a little 
