@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 // NOTE: Because iron moth just wasnt labled on PokeAIMMD the bot gets a little 
@@ -202,7 +204,9 @@ public class PokeAimMDScraper {
         sasha.write(info+"\n");
         sasha.close();
         for (Double val : typeSums){
-            samantha.write(val/offC+"\n");
+            if (offC == 0.){
+                samantha.write(0.+"\n");
+            } else {samantha.write(val/offC+"\n");}
         }
         for (Double val : defSums){
             samantha.write(val+"\n");
@@ -213,7 +217,6 @@ public class PokeAimMDScraper {
     }
     public static void main(String[] args) throws IOException {
         //PokeAimMDScraper.processSource(PokeAimMDScraper.genString(new URL("https://www.pokeaimmd.com/overused")));
-        pokePasteScrape();
-
+        //pokePasteScrape();
     }
 }

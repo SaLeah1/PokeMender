@@ -43,7 +43,7 @@ public class MoveInfoGen {
         }
     }
     public JSONObject download(String moveName) throws IOException{
-        System.out.println("Downloaded");
+        //System.out.println("Downloaded");
         moveName = moveName.toLowerCase();
         String urlString = String.format("https://pokeapi.co/api/v2/move/%s",moveName);
         URL APICall = new URL(urlString);

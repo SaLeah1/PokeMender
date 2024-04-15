@@ -47,11 +47,18 @@ public class TypeBot {
                 def2Indx = itt;
             } itt++;
         }
-        return this.vals[offIndx][def1Indx]*this.vals[offIndx][def2Indx];
+        double val = this.vals[offIndx][def1Indx]*this.vals[offIndx][def2Indx];
+        if(val==0){val = -3.;}
+        if(val==0.25){val = -2.;}
+        if(val==0.5){val = -1.;}
+        if(val==0.){val = 0.;}
+        if(val==0){val = 1.;}
+        if(val==0){val = 2.;}
+        return val;
     }
     public static void main(String[] args) {
         TypeBot jimmy = new TypeBot();
-        System.out.println(jimmy.typeMatch("normal", "fire"));
-        System.out.println(jimmy.typeMatch("normal", "fire",""));
+        System.out.println(jimmy.typeMatch("normal", "ghost"));
+        System.out.println(jimmy.typeMatch("normal", "ghost","dark"));
     }
 }
