@@ -17,11 +17,6 @@ public class Compressor {
 
         double[] compressedTeam = new double[38];
         for (String[] pokemon : team) {
-            for (String thing : pokemon) {
-               System.out.println(thing);
-            }
-        }
-        for (String[] pokemon : team) {
             double[] compressedPokemon = compressPokemon(pokemon,moveGen,pokeGen,typeChecker);
             for (int i = 0; i<compressedPokemon.length; i++){
                 compressedTeam[i] += compressedPokemon[i];
@@ -41,9 +36,6 @@ public class Compressor {
         double offC = 0.;
         double defC = 0.;
         for (int x=3;x<7;x++){
-            for(String item : values){
-                System.out.println(item);
-            }
             String item = values[x];
             String[] dTypes = moveGenerator.getMoveType(item);
             if (!dTypes[1].equals("status")){

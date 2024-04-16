@@ -3,7 +3,6 @@ package junior_is;
 // exceptions
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 // core
 import java.awt.*;
@@ -35,7 +34,7 @@ public class TeamPanel extends JPanel{
     public JComboBox<String> moveThreeBox;
     public JComboBox<String> moveFourBox;
 
-    @SuppressWarnings("rawtypes") // dont worry about it
+    @SuppressWarnings("rawtypes")
     public JComboBox[] moveBoxes;
     public JSpinner[] spinners;
 
@@ -46,7 +45,7 @@ public class TeamPanel extends JPanel{
     public JSpinner spdef;
     public JSpinner spe;
 
-    public TeamPanel(String[] itemArr) throws MalformedURLException, IOException{
+    public TeamPanel() throws IOException{
         setUIFont (new javax.swing.plaf.FontUIResource("Courier",Font.BOLD,10));
         MigLayout mig = new MigLayout(
             "",
@@ -57,7 +56,7 @@ public class TeamPanel extends JPanel{
         spritePanel = makeSpritePanel();
         movePanel = makeMovePanel();
         infoPanel = makeInfoPanel();
-        iNatPanel = makeiNatPanel(itemArr);
+        iNatPanel = makeiNatPanel();
         moveBoxes = new JComboBox[]{moveOneBox,moveTwoBox,moveThreeBox,moveFourBox};
         spinners = new JSpinner[]{hp,atk,def,spatk,spdef,spe};
         // There is nothing in the coding world I hate more than Java GUIs
@@ -66,7 +65,7 @@ public class TeamPanel extends JPanel{
         this.add(iNatPanel,"cell 2 1 1 1, grow");
         this.add(movePanel, "cell 0 2 3 1, grow");
     }
-    public JPanel makeSpritePanel() throws MalformedURLException, IOException{
+    public JPanel makeSpritePanel() throws IOException{
         JPanel spritePanel = new JPanel();
         BufferedImage bImg = ImageIO.read(new File("pokerecomender\\src\\main\\resources\\EMPTY.jpg"));
         Image img = bImg.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
@@ -99,7 +98,6 @@ public class TeamPanel extends JPanel{
         SpinnerNumberModel modSPATK = new SpinnerNumberModel(base, min, max, step);
         SpinnerNumberModel modSPDEF = new SpinnerNumberModel(base, min, max, step);
         SpinnerNumberModel modSPE = new SpinnerNumberModel(base, min, max, step);
-
 
         this.hp = new JSpinner(modHP);
         hideSpinnerArrow(this.hp);
@@ -162,7 +160,7 @@ public class TeamPanel extends JPanel{
         infoPanel.setBackground(new Color(218, 228, 242));
         return infoPanel;
     }
-    public JPanel makeiNatPanel(String[] itemArr) throws FileNotFoundException{
+    public JPanel makeiNatPanel() throws FileNotFoundException{
 
         JPanel holdPanel = new JPanel(new MigLayout(
             "wrap 1",
@@ -200,11 +198,7 @@ public class TeamPanel extends JPanel{
             "Timid/SPE/ATK"
         };
         this.abilityNames = new JComboBox<String>(tempAbilities);
-        if (itemArr.length == 0 || itemArr[0] == ""){
-            this.itemNames = new JComboBox<String>(tempItems);
-        } else {
-            this.itemNames = new JComboBox<String>(itemArr);
-        }
+        this.itemNames = new JComboBox<String>(tempItems);
         this.natureNames = new JComboBox<String>(natures);
         AutoCompletion.enable(this.abilityNames);
         AutoCompletion.enable(this.itemNames);

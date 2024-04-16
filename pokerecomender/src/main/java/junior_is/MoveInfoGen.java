@@ -64,8 +64,13 @@ public class MoveInfoGen {
         return new JSONObject(json);
     }
     public String[] getMoveType(String moveName) throws IOException{
-        JSONObject moveJSON = getJSON(moveName);
         String[] ret = new String[2];
+        if (moveName == "                   "){
+            ret[0] = "status";
+            ret[1] = "";
+            return ret;
+        }
+        JSONObject moveJSON = getJSON(moveName);
         String dClass = moveJSON.getJSONObject("damage_class").getString("name");
         ret[1] = dClass;
         String type = moveJSON.getJSONObject("type").getString("name");

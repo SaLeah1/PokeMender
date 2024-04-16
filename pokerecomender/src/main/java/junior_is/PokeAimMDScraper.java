@@ -37,7 +37,7 @@ public class PokeAimMDScraper {
         List<String> pasteLinks = new ArrayList<String>();
         while(code.contains("href=\"")){
             indx = code.indexOf("href=\"");
-            System.out.println(code.substring(indx+6, indx+42));
+            //System.out.println(code.substring(indx+6, indx+42));
             pasteLinks.add(code.substring(indx+6,indx+42));
             int nameIndx = code.indexOf("\" alt=\"");
             int nameEnd = code.indexOf(" - ");
@@ -154,7 +154,7 @@ public class PokeAimMDScraper {
         } catch (Exception e) { // something has gone horribly wrong (the file is ended) so we must purge the file 
             code = code.substring(code.length()-4);
         }
-        System.out.println      (name+","+ability+","+item+","+move1+","+move2+","+move3+","+move4);
+        //System.out.println      (name+","+ability+","+item+","+move1+","+move2+","+move3+","+move4);
         return new String[]{code,name+","+ability+","+item+","+move1+","+move2+","+move3+","+move4};
     }
     public static void genVector(String info, MoveInfoGen moveGenerator, PokeInfoGen pokeGenerator, TypeBot typeChecker, int counter) throws IOException{
@@ -169,14 +169,12 @@ public class PokeAimMDScraper {
         for (int x=3;x<7;x++){
             String item = parts[x];
             String[] dTypes = moveGenerator.getMoveType(item);
-            if (!dTypes[1].equals("status")){
-                offC += 1;
-                for (int j = 0; j < names.length; j++) {
-                        double c = typeChecker.typeMatch(dTypes[0], names[j]);
-                        typeSums[j] += c;
-                    } 
-            } else {
-                defC += 1;
+            for (int j = 0; j < names.length; j++) {
+                if (!dTypes[1].equals("status")){
+                    offC += 1;
+                    double c = typeChecker.typeMatch(dTypes[0], names[j]);
+                    typeSums[j] += c;
+                } else {typeSums[j]+=1;}
             }
         }
         double[] defSums = new double[18];
@@ -215,6 +213,6 @@ public class PokeAimMDScraper {
     }
     public static void main(String[] args) throws IOException {
         //PokeAimMDScraper.processSource(PokeAimMDScraper.genString(new URL("https://www.pokeaimmd.com/overused")));
-        //pokePasteScrape();
+        pokePasteScrape();
     }
 }

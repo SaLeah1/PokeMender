@@ -9,6 +9,7 @@ import java.util.Arrays;
 // Core
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.io.File;
 import java.util.function.IntConsumer;
@@ -58,7 +59,8 @@ public class Main {
         } catch(IndexOutOfBoundsException e){
             System.out.println("No Item CSV btw"); // theres a what to do on the teampanel for empty itemsets dw
         } String[] itemArr = itemStr.split(",");
-        mainWindow = new GUI(itemArr);
+        mainWindow = new GUI();
+        mainWindow.updateAllItemsList(itemArr);
 
         int i = 0;
         int j = 0;
@@ -77,6 +79,14 @@ public class Main {
         IntConsumer natureConsumer = this::natureUpdated;
         IntConsumer itemConsumer = this::itemUpdated;
         IntConsumer spreadConsumer = this::spreadUpdated;
+        IntConsumer recomamendtionConsumer = value -> {
+            try {
+                generateInfoArray(value);
+            } catch (IOException e) {
+                System.err.println("If this occured, something has gone horribly wrong");
+                e.printStackTrace();
+            }
+        };
         
         for(TeamPanel p : mainWindow.teamPanels){
             // Move listeners
@@ -105,9 +115,9 @@ public class Main {
                 SpreadListener sL = new SpreadListener(l,spreadConsumer);
                 p.spinners[k].addChangeListener(sL);
                 l++;
-            }
+            } 
             mainWindow.updatePokemonList(p, pokemonArr);
-        }
+        } mainWindow.fireButton.addActionListener(new CatListener(100, recomamendtionConsumer));
     }
 
     /* 
@@ -134,9 +144,6 @@ public class Main {
             mainWindow.updateSprite(mainWindow.teamPanels[listenerUID], pokeGenerator.getSprite(item));
             mainWindow.updateMovesList(mainWindow.teamPanels[listenerUID], moves);
             mainWindow.updateAbilitiesList(mainWindow.teamPanels[listenerUID], abil);
-            if(listenerUID == 5){
-                generateInfoArray();
-            }
         }
     }
     public void moveUpdated(int listenerUID){
@@ -164,10 +171,11 @@ public class Main {
         int item = (int) mainWindow.teamPanels[panel].spinners[box].getValue();
         //System.out.println(item);
     }
-    public void generateInfoArray() throws IOException{
+    public void generateInfoArray(int unused) throws IOException{
         List<String[]> teamInfo = new ArrayList<String[]>();
         for (int i=0; i<5; i++){
-            if (mainWindow.teamPanels[i].pokemonNames.getSelectedItem()!="                   "){
+            if (!mainWindow.teamPanels[i].pokemonNames.getSelectedItem().equals("                   ")){
+                System.out.println(i);
                 String[] monInfo = new String[7];
                 monInfo[0] = (String) mainWindow.teamPanels[i].pokemonNames.getSelectedItem();
                 monInfo[1] = (String) mainWindow.teamPanels[i].itemNames.getSelectedItem();
@@ -185,9 +193,10 @@ public class Main {
             }
         }
         double[] teamVector = compressor.CompressTeam(teamInfo);
-        teamComparator.compareToData(teamVector);
-
+        Map<String, Double> recommendations = teamComparator.compareToData(teamVector);
+        mainWindow.createRecomendationPane(recommendations, pokeGenerator);
     }
+
     public static void main(String[] args) throws MalformedURLException, IOException{
         new Main();
     }

@@ -53,7 +53,7 @@ public class TeamComparator {
                 recommendedMons.add(name);
                 count++;
             }
-            if(count>10){break;}
+            if(count>3){break;}
         }
         return similarityList;
     }
@@ -119,8 +119,8 @@ public class TeamComparator {
         String[] t2 = new String[]{"roaring-moon","booster-energy","protosynthesis","dragon-dance","acrobatics","knock-off","taunt"};
         String[] t3 = new String[]{"glimmora","red-card","toxic-debris","stealth-rock","mortal-spin","earth-power","power-gem"};
         String[] t4 = new String[]{"kingambit","air-balloon","supreme-overlord","swords-dance","sucker-punch","kowtow-cleave","iron-head"};
-        //String[] t5 = new String[]{"zamazenta","leftovers","dauntless-shield","iron-defense","body-press","heavy-slam","roar"};
-        String[] t5 = new String[]{"enamorus-incarnate","choice-scarf","contrary","moonblast","earth-power","mystical-fire","healing-wish"};
+        String[] t5 = new String[]{"zamazenta","leftovers","dauntless-shield","iron-defense","body-press","heavy-slam","roar"};
+        //String[] t5 = new String[]{"enamorus-incarnate","choice-scarf","contrary","moonblast","earth-power","mystical-fire","healing-wish"};
         teamList.add(t1);
         teamList.add(t2);
         teamList.add(t3);

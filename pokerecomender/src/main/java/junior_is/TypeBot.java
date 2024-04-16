@@ -7,8 +7,7 @@ public class TypeBot {
     public TypeBot(){
         this.names = new String[]{
             "normal","fire","water","electric","grass","ice","fighting","poison","ground",
-            "flying","psychic","bug","rock","ghost","dragon","dark","steel","fairy","" // "" for missing secondary type 
-        }; // this was fun to make :^ )
+            "flying","psychic","bug","rock","ghost","dragon","dark","steel","fairy",""}; // "" for missing secondary type 
         double[] normOff = new double[]{1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,0.0,1.0,1.0,0.5,1.0,1.0};
         double[] fireOff = new double[]{1.0,0.5,0.5,1.0,2.0,2.0,1.0,1.0,1.0,1.0,1.0,2.0,0.5,1.0,0.5,1.0,2.0,1.0,1.0};
         double[] watrOff = new double[]{1.0,2.0,0.5,1.0,0.5,1.0,1.0,1.0,2.0,1.0,1.0,1.0,2.0,1.0,0.5,1.0,1.0,1.0,1.0};
@@ -27,8 +26,9 @@ public class TypeBot {
         double[] darkOff = new double[]{1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,2.0,1.0,1.0,2.0,1.0,0.5,1.0,0.5,1.0};
         double[] stlOff  = new double[]{1.0,0.5,0.5,0.5,1.0,2.0,1.0,1.0,1.0,1.0,1.0,1.0,2.0,1.0,1.0,1.0,0.5,2.0,1.0};
         double[] fairOff = new double[]{1.0,0.5,1.0,1.0,1.0,1.0,2.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,2.0,2.0,0.5,1.0,1.0};
+        double[] nullOff = new double[]{1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
         this.vals = new double[][]{normOff,fireOff,watrOff,elecOff,grasOff,iceOff,fghtOff,poisOff,grndOff,flyOff,
-            psyOff,bugOff,rockOff,ghstOff,drgnOff,darkOff,stlOff,fairOff};
+            psyOff,bugOff,rockOff,ghstOff,drgnOff,darkOff,stlOff,fairOff,nullOff};
     }
     public double typeMatch(String offensiveType, String defensiveType){ // because java is too good for default params
         return typeMatch(offensiveType, defensiveType,"");
@@ -48,17 +48,19 @@ public class TypeBot {
             } itt++;
         }
         double val = this.vals[offIndx][def1Indx]*this.vals[offIndx][def2Indx];
+        /*
         if(val==0){val = -3.;}
         else if(val==0.25){val = -2.;}
         else if(val==0.5){val = -1.;}
         else if(val==0.){val = 0.;}
         else if(val==0.){val = 1.;}
         else if(val==0.){val = 2.;}
+        */
         return val;
     }
     public static void main(String[] args) {
         TypeBot jimmy = new TypeBot();
-        System.out.println(jimmy.typeMatch("normal", "ghost"));
+        System.out.println(jimmy.typeMatch("", ""));
         System.out.println(jimmy.typeMatch("normal", "ghost","dark"));
     }
 }
