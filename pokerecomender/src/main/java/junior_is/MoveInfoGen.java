@@ -19,7 +19,15 @@ import java.util.Scanner;
 import org.json.JSONObject;
 import org.apache.commons.io.IOUtils;
 
-public class MoveInfoGen {
+/*
+ * Proxy for PokeAPI server, methods are for accessing move information
+ * Caches files to pokerecomender\src\main\java\junior_is\caches\moveCache
+ * getJSON checks if a file is cached, if it is, it returns that file as a JSONObject, else it queies PokeAPI and saves the result to the cache
+ * Use 'getMoveType()' to get an array containing the move class (phsyical, special, or status) and its type
+ */
+
+
+public class MoveInfoGen { 
 
     List<String> cachedMoves = new ArrayList<String>();
 

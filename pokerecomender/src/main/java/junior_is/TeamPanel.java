@@ -15,6 +15,14 @@ import javax.swing.plaf.basic.BasicSpinnerUI;
 // 3rd party
 import net.miginfocom.swing.*;
 
+/*
+ * GUI ELEMENT:
+ * Used by GUI.java to easily create multiple identical sections within the GUI. 
+ * Uses the thirdparty layout manager "MigLayout"
+ * All functions present are used for building its self and should not be called after set up
+ * Modifying the components of the various elements, is done directly via interacting with public variables
+ */
+
 public class TeamPanel extends JPanel{
 
     public JPanel spritePanel;

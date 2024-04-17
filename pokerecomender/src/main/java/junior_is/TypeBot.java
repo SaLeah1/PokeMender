@@ -1,5 +1,10 @@
 package junior_is;
 
+/*
+ * Returns a double ranging from 0. to 4.0 based on how a single offensive and one or two defensive types interact
+ * For more info, look up "pokemon type chart", this is essentially that with an additional row ("") for null types 
+ */
+
 public class TypeBot {
     public String[] names;
     public double[][] vals;

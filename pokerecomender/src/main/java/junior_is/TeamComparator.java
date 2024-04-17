@@ -1,5 +1,6 @@
 package junior_is;
 
+// Core
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,7 +17,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+// 3rd Party
 import org.apache.commons.math3.linear.*;
+
+/*
+ * Main Class for determining recommendations
+ * Takes in a compressed team (see Compressor.java), 
+ * Inverts the first 36 dimensions of the vector,
+ * runs cosine similarity on the modified vector against all vectors in pokeVectDec
+ * returns a LinkedHashMap(abstracted to generic map) containing cosSim values and associated pokemonSheet file names
+ * retuned Map is sorted largest to smallest
+ * 
+ * run 'compareToData()' to generate recommendations (returns the recommendation score for each vector in PokeVectData)
+ */
 
 public class TeamComparator {
     public Map<double[],String> vectors;

@@ -15,8 +15,9 @@ import java.io.File;
 import java.util.function.IntConsumer;
 
 /*
- *
- *
+ * TODO: Add naming exceptions to PokeInfoGen. Found issues are as follows:
+ * Ogerpon-x should be reduced to just ogerpon
+ * Escue should be expanded to escue-ice-head or whatever its called
  */
 
 public class Main {
