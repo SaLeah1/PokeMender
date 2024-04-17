@@ -16,6 +16,21 @@ import java.util.Map;
 import org.json.JSONObject;
 import org.apache.commons.io.IOUtils;
 
+/*
+ * Note, very few pieces of smogon data are implemented into the recommender. Sorry 👍
+ * 
+ * Smogon parser acts as a pseudo-api for a smogon chaos file
+ * Smogon stores data from their pokemon simulator in JSON files located at https://www.smogon.com/stats/2024-01/chaos/
+ * This class reads in a JSON file, processes it to find the data section and the info section
+ * Data contains all usage data about pokemon.
+ * Info contains specifics about the simulator such as number of games played and average playerweight
+ * 
+ * After the data and info have been sorted, the following methods allow for querying the Data
+ *      getPokemon() returns a list of all avalible pokemon
+ *      getUsage() takes in a pokemon name and returns how often that pokemon has been used in recorded games
+ *      getTAMIData() takes in a pokemon name and a specifier (teammates, abilities, moves, items) and returns a map containing the different types of the specifier and their corresponding usage rates
+ */
+
 public class SmogonParser {
     public JSONObject info;
     public JSONObject data;

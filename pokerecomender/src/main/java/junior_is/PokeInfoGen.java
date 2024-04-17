@@ -1,12 +1,13 @@
 package junior_is;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
+
 // Exceptions
 import java.io.IOException;
+import java.io.FileNotFoundException;
 
 // Core
+import java.io.File;
+import java.io.FileWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -20,6 +21,15 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.apache.commons.io.IOUtils;
 
+/*
+ * Proxy for PokeAPI server, methods are for accessing pokemon information
+ * Caches files to pokerecomender\src\main\java\junior_is\caches\moveCache
+ * getJSON checks if a file is cached, if it is, it returns that file as a JSONObject, else it queies PokeAPI and saves the result to the cache
+ * Use 'getSprite()' to get a string which is the url of a sprite
+ * Use 'getStats()' to get an array of integers containing the pokemon's base stats (Unused)
+ * Use 'getMoves()' 'getAbilities()' or 'getTypes()' to get an array of strings containing all moves, abilities, or types respectivley
+ */
+
 public class PokeInfoGen {
 
     List<String> cachedMons = new ArrayList<String>();
@@ -32,7 +42,7 @@ public class PokeInfoGen {
         } iStream.close();
     }
 
-    public JSONObject getJSON(String pokemonName) throws IOException{
+    public JSONObject getJSON(String pokemonName) throws IOException{  // main proxy method, checks to see if cached and if not downloads and adds to cache
         pokemonName = pokemonName.toLowerCase();
         if (cachedMons.contains(pokemonName)){
             Path cache = Path.of(String.format("pokerecomender/src/main/java/junior_is/caches/pokeCache/%s.json",pokemonName));
@@ -56,31 +66,6 @@ public class PokeInfoGen {
         cacheFile.close();
         cachedMons.add(pokemonName);
         return new JSONObject(json);
-    }
-
-    public Object[] getInfo(String pokemonName) throws IOException{
-        Object[] returner = new Object[3];
-        JSONObject fullJSON = getJSON(pokemonName);
-        // Type
-        String[] typesArr = new String[2];
-        JSONArray types = fullJSON.getJSONArray("types");
-        for(int i = 0; i<types.length(); i++) {
-            JSONObject typeInf = (JSONObject) types.get(i);
-            String type = typeInf.getJSONObject("type").getString("name");
-            typesArr[i] = type;
-        }
-        returner[0] = typesArr;
-        // Stats
-        int[] statsArr = new int[6];
-        JSONArray stats = fullJSON.getJSONArray("stats");
-        for(int i = 0; i<stats.length(); i++) {
-            JSONObject statsInf = (JSONObject) stats.get(i);
-            int value = statsInf.getInt("base_stat");
-            statsArr[i] = value;
-        }
-        // Sprite
-        returner[2] = fullJSON.getJSONObject("sprites").getJSONObject("other").getJSONObject("official-artwork").getString("front_default");
-        return returner;
     }
 
     public String getSprite(String pokemonName) throws IOException{

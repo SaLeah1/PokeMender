@@ -188,13 +188,12 @@ public class Main {
                 teamInfo.add(monInfo);
             }
         }
+        List<String> names = new ArrayList<String>();
         for(String[] mon : teamInfo){
-            for(String thing : mon){
-                System.out.println(thing);
-            }
+            names.add(mon[0]);
         }
         double[] teamVector = compressor.CompressTeam(teamInfo);
-        Map<String, Double> recommendations = teamComparator.compareToData(teamVector);
+        Map<String, Double> recommendations = teamComparator.compareToData(teamVector, names);
         mainWindow.createRecomendationPane(recommendations, pokeGenerator);
     }
 

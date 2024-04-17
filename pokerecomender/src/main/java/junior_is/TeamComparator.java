@@ -37,7 +37,7 @@ public class TeamComparator {
         getDataFromFile();
     }
 
-    public Map<String,Double> compareToData(double[] teamVector) throws FileNotFoundException{
+    public Map<String,Double> compareToData(double[] teamVector, List<String> teammates) throws FileNotFoundException{
         Map<String,Double> similarityList = new HashMap<String,Double>();
         for (int i = 0; i < teamVector.length-2; i++) { // invert def and off totals to find things that complement
             teamVector[i] *= -1;
@@ -51,6 +51,9 @@ public class TeamComparator {
         similarityList = sortHashMap(similarityList);
         int count = 0 ;
         List<String> recommendedMons = new ArrayList<String>();
+        for (String mon : teammates) {
+            recommendedMons.add(mon);
+        }
         for (Entry<String,Double> entrySet : similarityList.entrySet()) {
             String name = entrySet.getKey();
             Matcher matcher = Pattern.compile("\\d+").matcher(name);
@@ -139,7 +142,13 @@ public class TeamComparator {
         teamList.add(t3);
         teamList.add(t4);
         teamList.add(t5);
+        List<String> teamNames = new ArrayList<String>();
+        teamNames.add("darkrai");
+        teamNames.add("roaring-moon");
+        teamNames.add("glimmora");
+        teamNames.add("kingambit");
+        teamNames.add("zamazenta");
         double[] compressedTeam = c.CompressTeam(teamList);
-        comparator.compareToData(compressedTeam);
+        comparator.compareToData(compressedTeam, teamNames);
     }
 }

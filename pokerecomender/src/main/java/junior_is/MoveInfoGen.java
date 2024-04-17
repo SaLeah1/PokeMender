@@ -39,7 +39,7 @@ public class MoveInfoGen {
         } iStream.close();
     }
 
-    public JSONObject getJSON(String moveName) throws IOException{
+    public JSONObject getJSON(String moveName) throws IOException{   // main proxy function, if the file is already in the cache it returns that otherwise queries the server
         moveName = moveName.toLowerCase();
         if (cachedMoves.contains(moveName)){
             //System.out.println("got");
@@ -73,7 +73,7 @@ public class MoveInfoGen {
     }
     public String[] getMoveType(String moveName) throws IOException{
         String[] ret = new String[2];
-        if (moveName == "                   "){
+        if (moveName == "                   "){  // if move slot is left empty, returns a status move with null type
             ret[0] = "status";
             ret[1] = "";
             return ret;
