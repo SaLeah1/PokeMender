@@ -168,7 +168,7 @@ public class PokeAimMDScraper {
         return new String[]{code,name+","+ability+","+item+","+move1+","+move2+","+move3+","+move4};
     }
     public  void genVector(String info, MoveInfoGen moveGenerator, PokeInfoGen pokeGenerator, TypeBot typeChecker, int counter) throws IOException{
-        String[] parts = info.split(",");                                               // split the returned string into its components
+        String[] parts = info.split(",");                                               // split the passed in info string into its components
         String[] names = new String[]{                                                        // generate the offensive and defensive vectors of the pokemon
             "normal","fire","water","electric","grass","ice","fighting","poison","ground",    
             "flying","psychic","bug","rock","ghost","dragon","dark","steel","fairy"};

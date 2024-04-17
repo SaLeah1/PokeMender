@@ -37,9 +37,9 @@ public class TeamComparator {
         getDataFromFile();
     }
 
-    public Map<String,Double> compareToData(double[] teamVector, List<String> teammates) throws FileNotFoundException{
+    public Map<String,Double> compareToData(double[] teamVector, List<String> teammates) throws FileNotFoundException{  // Compares all pokeVectors to the team vector and returns a map of (pokesheet:similarity)
         Map<String,Double> similarityList = new HashMap<String,Double>();
-        for (int i = 0; i < teamVector.length-2; i++) { // invert def and off totals to find things that complement
+        for (int i = 0; i < teamVector.length-2; i++) { // invert def and off totals to find things that complement as opposed to things that match
             teamVector[i] *= -1;
         }
         for (Entry<double[],String> entrySet : this.vectors.entrySet()) {
@@ -50,13 +50,13 @@ public class TeamComparator {
         }
         similarityList = sortHashMap(similarityList);
         int count = 0 ;
-        List<String> recommendedMons = new ArrayList<String>();
+        List<String> recommendedMons = new ArrayList<String>();   // add mons already on the team to the blacklist so that they arent recommended again
         for (String mon : teammates) {
             recommendedMons.add(mon);
         }
         for (Entry<String,Double> entrySet : similarityList.entrySet()) {
             String name = entrySet.getKey();
-            Matcher matcher = Pattern.compile("\\d+").matcher(name);
+            Matcher matcher = Pattern.compile("\\d+").matcher(name);    // pull the name out of the sheet name (sheet names are in the form nameXYZ) where XYZ is a number
             matcher.find();
             String nums = matcher.group();
             name = name.substring(0,name.indexOf(nums));
@@ -64,22 +64,22 @@ public class TeamComparator {
                 //System.out.println(name+": "+entrySet.getKey()+" "+entrySet.getValue());
                 Scanner s = new Scanner(new File(
                     String.format("pokerecomender\\src\\main\\resources\\pokeSheetCache\\%s.txt",entrySet.getKey())));
-                System.out.println(s.nextLine().replaceAll(",",", "));
+                System.out.println(s.nextLine().replaceAll(",",", "));  // convert the read in pokesheet to a string 
                 s.close();
                 recommendedMons.add(name);
                 count++;
             }
-            if(count>3){break;}
+            if(count>3){break;}  // only recommend three mons
         }
         return similarityList;
     }
 
-    public void getDataFromFile() throws FileNotFoundException{ // preprocessing
+    public void getDataFromFile() throws FileNotFoundException{ // preprocessing to read in the pokeVectData file
         Scanner fileReader = new Scanner(new File("pokerecomender\\src\\main\\resources\\pokeVectData.vect"));
         Map<double[],String> vectors = new HashMap<double[],String>();
         File[] files = new File("pokerecomender\\src\\main\\resources\\pokeSheetCache").listFiles();
         List<String> fileNames = new ArrayList<String>();
-        for (File file : files) {
+        for (File file : files) {                               // generate the corresponding list of pokeSheets (row number in pokeVectData = location in file list)
             String filePath = file.toString();
             filePath = filePath.substring(filePath.indexOf("Cache")+6,filePath.indexOf(".txt"));
             fileNames.add(filePath);
@@ -100,7 +100,7 @@ public class TeamComparator {
         this.vectors = vectors;
         return;
     }
-    public Double cosSim(double[] Vect1, double[] Vect2){
+    public Double cosSim(double[] Vect1, double[] Vect2){           // run cosine similarity on two vectors
         /* returns a double between -1 and 1
          * 1 is exact match, -1 is exact mismatch
          */
@@ -109,7 +109,7 @@ public class TeamComparator {
         return Matrx1.cosine(Matrx2);
     }
 
-    public Map<String,Double> sortHashMap(Map<String,Double> map){
+    public Map<String,Double> sortHashMap(Map<String,Double> map){              // Sort the hash map into a linked hash map and then abstract back to a standard map
         List<Map.Entry<String, Double> > listedMap =
                new LinkedList<Map.Entry<String, Double> >(map.entrySet());
         // Sort the list

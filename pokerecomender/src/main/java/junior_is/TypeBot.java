@@ -3,6 +3,8 @@ package junior_is;
 /*
  * Returns a double ranging from 0. to 4.0 based on how a single offensive and one or two defensive types interact
  * For more info, look up "pokemon type chart", this is essentially that with an additional row ("") for null types 
+ * 
+ * Call typeMatch() to return a double equal to the type effectivness of the offensive type against any defensive type(s)
  */
 
 public class TypeBot {
@@ -12,7 +14,7 @@ public class TypeBot {
     public TypeBot(){
         this.names = new String[]{
             "normal","fire","water","electric","grass","ice","fighting","poison","ground",
-            "flying","psychic","bug","rock","ghost","dragon","dark","steel","fairy",""}; // "" for missing secondary type 
+            "flying","psychic","bug","rock","ghost","dragon","dark","steel","fairy",""}; // "" for null type
         double[] normOff = new double[]{1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,0.0,1.0,1.0,0.5,1.0,1.0};
         double[] fireOff = new double[]{1.0,0.5,0.5,1.0,2.0,2.0,1.0,1.0,1.0,1.0,1.0,2.0,0.5,1.0,0.5,1.0,2.0,1.0,1.0};
         double[] watrOff = new double[]{1.0,2.0,0.5,1.0,0.5,1.0,1.0,1.0,2.0,1.0,1.0,1.0,2.0,1.0,0.5,1.0,1.0,1.0,1.0};

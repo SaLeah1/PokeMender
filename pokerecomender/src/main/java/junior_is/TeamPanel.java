@@ -29,7 +29,7 @@ public class TeamPanel extends JPanel{
     public JPanel movePanel;
     public JPanel infoPanel;
     public JPanel spreadPanel;
-    public JPanel iNatPanel;
+    public JPanel iNatPanel; // iNat = Item / Nature. This pannel contains both combo boxes
 
     public JLabel spriteLabel;
 
@@ -218,17 +218,18 @@ public class TeamPanel extends JPanel{
         return holdPanel;
     }
 
-    @SuppressWarnings("rawtypes") // dont worry about it
-    public static void setUIFont (javax.swing.plaf.FontUIResource f){
+    @SuppressWarnings("rawtypes")
+    public static void setUIFont (javax.swing.plaf.FontUIResource f){   // method to set the font of everything using a ui manager
         java.util.Enumeration keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {
           Object key = keys.nextElement();
           Object value = UIManager.get (key);
-          if (value instanceof javax.swing.plaf.FontUIResource)
+          if (value instanceof javax.swing.plaf.FontUIResource)         // loop through all of the things in my UI, if any of them are a FontUIResource, apply the font to them
             UIManager.put (key, f);
           }
         } 
-    public void hideSpinnerArrow(JSpinner spinner) {
+    
+    public void hideSpinnerArrow(JSpinner spinner) {                   // hide the spinner arrows of a spinner and increase its space to compensate
     Dimension d = spinner.getPreferredSize();
     d.width = 30;
     spinner.setUI(new BasicSpinnerUI() {
