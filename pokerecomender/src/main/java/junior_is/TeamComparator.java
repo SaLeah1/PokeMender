@@ -131,6 +131,7 @@ public class TeamComparator {
         TeamComparator comparator = new TeamComparator();
         Compressor c = new Compressor();
         List<String[]> teamList = new ArrayList<String[]>();
+        /*
         String[] t1 = new String[]{"darkrai","expert-belt","bad-dreams","ice-beam","sludge-bomb","dark-pulse","focus-blast"};
         String[] t2 = new String[]{"roaring-moon","booster-energy","protosynthesis","dragon-dance","acrobatics","knock-off","taunt"};
         String[] t3 = new String[]{"glimmora","red-card","toxic-debris","stealth-rock","mortal-spin","earth-power","power-gem"};
@@ -148,6 +149,25 @@ public class TeamComparator {
         teamNames.add("glimmora");
         teamNames.add("kingambit");
         teamNames.add("zamazenta");
+        double[] compressedTeam = c.CompressTeam(teamList);
+        */
+        String[] t1 = new String[]{"heracross","flame-orb","guts","earthquake","megahorn","close-combat","facade"};
+        String[] t2 = new String[]{"porygon-Z","choice-specs","adaptability","ice-beam","tri-attack","shadow-ball","charge-beam"};
+        String[] t3 = new String[]{"kingambit","black-glasses","supreme-overlord","kowtow-cleave","iron-head","swords-dance","x-scissor"};
+        String[] t4 = new String[]{"dragonite","lum-berry","multiscale","dragon-dance","extreme-speed","outrage","earthquake"};
+        String[] t5 = new String[]{"volcarona","leftovers","swarm","quiver-dance","flamethrower","bug-buzz","tera-blast"};
+        //String[] t2 = new String[]{"articuno","damp-rock","pressure","tackle","tackle","tackle","earthquake"};
+        teamList.add(t1);
+        teamList.add(t2);
+        teamList.add(t3);
+        teamList.add(t4);
+        teamList.add(t5);
+        List<String> teamNames = new ArrayList<String>();
+        teamNames.add("heracross");
+        teamNames.add("porygon-Z");
+        teamNames.add("kingambit");
+        teamNames.add("dragonite");
+        teamNames.add("volcarona");
         double[] compressedTeam = c.CompressTeam(teamList);
         comparator.compareToData(compressedTeam, teamNames);
     }

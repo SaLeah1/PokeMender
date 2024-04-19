@@ -44,6 +44,7 @@ public class PokeInfoGen {
 
     public JSONObject getJSON(String pokemonName) throws IOException{  // main proxy method, checks to see if cached and if not downloads and adds to cache
         pokemonName = pokemonName.toLowerCase();
+        pokemonName = pokemonName.replaceAll(" ","-");
         if (cachedMons.contains(pokemonName)){
             Path cache = Path.of(String.format("pokerecomender/src/main/java/junior_is/caches/pokeCache/%s.json",pokemonName));
             String jsonString = Files.readString(cache);
@@ -55,6 +56,7 @@ public class PokeInfoGen {
 
     public JSONObject download(String pokemonName) throws IOException{
         pokemonName = pokemonName.toLowerCase();
+        pokemonName = pokemonName.replaceAll(" ","-");
         String urlString = String.format("https://pokeapi.co/api/v2/pokemon/%s",pokemonName);
         URL APICall = new URL(urlString);
         String json = IOUtils.toString(APICall, Charset.forName("UTF-8"));

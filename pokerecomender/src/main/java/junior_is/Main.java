@@ -17,7 +17,8 @@ import java.util.function.IntConsumer;
 /*
  * TODO: Add naming exceptions to PokeInfoGen. Found issues are as follows:
  * Ogerpon-x should be reduced to just ogerpon
- * Escue should be expanded to escue-ice-head or whatever its called
+ * Escue should be expanded to escue-ice-head
+ * Tauros-paldea is super broken in a whole lot of ways
  */
 
 public class Main {

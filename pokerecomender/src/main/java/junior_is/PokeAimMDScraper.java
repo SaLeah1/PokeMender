@@ -212,13 +212,13 @@ public class PokeAimMDScraper {
         for (Double val : typeSums){
             if (offC == 0.){
                 vectorWriter.write(0.+"\n");
-            } else {vectorWriter.write(val/offC+"\n");}
+            } else {vectorWriter.write(val+"\n");}
         }
         for (Double val : defSums){
             vectorWriter.write(val+"\n");
         }
-        vectorWriter.write((offC/4.)+"\n");
-        vectorWriter.write((defC/4.)+"");
+        vectorWriter.write((offC)+"\n");
+        vectorWriter.write((defC)+"");
         vectorWriter.close();
     }
     public static void main(String[] args) throws IOException {
